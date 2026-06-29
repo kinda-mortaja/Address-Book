@@ -274,8 +274,14 @@ function ContactCard({ contact }) {
 }
 
 export default function AddressBookApp() {
-  const [contacts, setContacts] = useState(SEED_CONTACTS);
-  const [action, setAction] = useState("all");
+const [contacts, setContacts] = useState(() => {
+  try {
+    const saved = localStorage.getItem("jawwal_contacts");
+    return saved ? JSON.parse(saved) : SEED_CONTACTS;
+  } catch {
+    return SEED_CONTACTS;
+  }
+});  const [action, setAction] = useState("all");
   const [feedback, setFeedback] = useState(null);
   const [letterFilter, setLetterFilter] = useState(null);
 
@@ -294,6 +300,9 @@ export default function AddressBookApp() {
 
   const [deleteNumberQuery, setDeleteNumberQuery] = useState("");
   const [confirmDeleteNumber, setConfirmDeleteNumber] = useState(false);
+  useEffect(() => {
+  localStorage.setItem("jawwal_contacts", JSON.stringify(contacts));
+}, [contacts]);
 
   useEffect(() => {
     if (!feedback) return;
